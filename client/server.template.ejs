@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1,mininum-scale=1,maximum-scale=1,user-scaleable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <%%- meta %>
+  <%%- title %>
+  <!-- <link href="https://cdn.bootcss.com/simplemde/1.11.2/simplemde.min.css" rel="stylesheet"> -->
+  <!-- <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> -->
+  <%%- link %>
+  <%%- style %>
+  <style id="jss-server-side">
+  </style>
+</head>
+<body>
+  <div id="root"><%%- appString %></div>
+  <script>
+    window.__INITIAL__STATE__ = <%%- initialState %>
+  </script>
+</body>
+</html>

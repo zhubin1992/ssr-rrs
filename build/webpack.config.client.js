@@ -2,7 +2,7 @@
  * @Author: zb
  * @Date: 2019-03-25 18:00:51
  * @Last Modified by: zb
- * @Last Modified time: 2019-03-26 16:43:42
+ * @Last Modified time: 2019-03-28 10:09:31
  */
 const path = require('path')
 const webpack = require('webpack')
@@ -13,6 +13,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const baseConfig = require('./webpack.base')
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -109,6 +110,7 @@ if (isDev) {
       }
     }
   }
+  config.plugins.push(new CleanWebpackPlugin())
   config.plugins.push(new CopyWebpackPlugin([
     {
       from: './client/public',

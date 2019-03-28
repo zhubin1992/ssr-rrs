@@ -2,7 +2,7 @@
  * @Author: zb
  * @Date: 2019-03-25 18:01:52
  * @Last Modified by: zb
- * @Last Modified time: 2019-03-27 23:16:39
+ * @Last Modified time: 2019-03-28 22:50:17
  */
 import { delay } from 'redux-saga'
 import {
@@ -31,20 +31,26 @@ function* login(action) {
   // }
 }
 function* loginToken(action) {
-  const res = yield call(post, '/accesstoken', { accesstoken: action.token })
-  if (res.success) {
+  try {
+    const res = yield call(post, '/accesstoken', { accesstoken: action.token })
+    if (res.success) {
+      yield put({
+        type: 'loginSuccess',
+        user: {
+          id: res.id,
+          name: res.loginname,
+        },
+      })
+    }
+  } catch {
     yield put({
-      type: 'loginSuccess',
-      user: {
-        id: res.id,
-        name: res.loginname,
-      },
+      type: 'logout',
     })
   }
 }
 
 function* getUserImg() {
-  yield delay(1000)
+  yield call(delay, 1000);
   const res = getRandomAvatar()
   yield put({
     type: 'loginSuccess',

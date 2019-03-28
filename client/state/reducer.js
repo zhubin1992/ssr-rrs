@@ -2,7 +2,7 @@
  * @Author: zb
  * @Date: 2019-03-25 18:01:37
  * @Last Modified by: zb
- * @Last Modified time: 2019-03-26 10:41:29
+ * @Last Modified time: 2019-03-28 22:48:19
  */
 import immutable from 'immutable'
 import { combineReducers } from 'redux-immutable'
@@ -23,6 +23,12 @@ function mainReducer(state = initialState(), action) {
       const newstate = state
         .set('user', immutable.fromJS(action.user))
         .set('connect', true)
+      return newstate
+    }
+    case 'logout': {
+      const newstate = state
+        .set('user', immutable.fromJS({}))
+        .set('connect', false)
       return newstate
     }
     default:

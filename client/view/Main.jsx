@@ -3,7 +3,7 @@
  * @Author: zb
  * @Date: 2019-03-25 18:02:13
  * @Last Modified by: zb
- * @Last Modified time: 2019-03-27 23:36:13
+ * @Last Modified time: 2019-03-28 22:50:00
  */
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
@@ -45,7 +45,7 @@ class Main extends Component {
   }
 
   componentDidMount() {
-    if (!this.props.user.get('id')) this.props.fetchToken('af93d65b-bdc0-45a7-af8f-7cc3d021b1c7')
+    if (!this.props.user.get('id')) this.props.fetchToken('***************')
   }
 
 

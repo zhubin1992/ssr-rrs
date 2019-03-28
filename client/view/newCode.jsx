@@ -3,7 +3,7 @@
  * @Author: zb
  * @Date: 2019-03-25 18:02:55
  * @Last Modified by: zb
- * @Last Modified time: 2019-03-27 23:37:00
+ * @Last Modified time: 2019-03-28 22:29:10
  */
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
@@ -26,7 +26,7 @@ class NewCode extends Component {
     static asyncData(store) {
       const saga = getUserImg
       // redux-thunk
-      // return store.dispatch(action.loginToken('af93d65b-bdc0-45a7-af8f-7cc3d021b1c7'))
+      // return store.dispatch(action.loginToken(''))
       return runSaga({
         dispatch: res => store.dispatch(res),
       }, saga, {}).done
@@ -39,7 +39,7 @@ class NewCode extends Component {
     }
 
     componentDidMount() {
-      if (!this.props.user.get('avatar')) this.props.getUserImg('af93d65b-bdc0-45a7-af8f-7cc3d021b1c7')
+      if (!this.props.user.get('avatar')) this.props.getUserImg()
     }
 
 

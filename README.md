@@ -56,7 +56,7 @@ const context = {}
 ```
 在页面路由级组件内加入helmet插件，用来给每个路由的页面添加title和meta
 ```
-// server-render.js
+// 服务端server-render.js
 
     const content = ReactDomServer.renderToString(app)
     const html = ejs.render(template, {
@@ -73,4 +73,37 @@ const context = {}
 
 ### 利用css-in-js做每页渲染
 
-...
+上一个ssr项目是用<a href='https://material-ui.com/' target='_blank'>material-ui</a>作为样式组件库导入的，它支持服务端渲染并提供了详细的使用流程。而在这个项目我并不打算用它，想用自己写的组件，而且可以用less，找了很多方法用css-in-js能较好的解决需求。
+首先在每个页面组件里添加一个高阶函数，这个函数用来把页面需要渲染的样式用_getCss处理后传入到静态路由提供的context里面，然后在服务端渲染的时候再把样式取出来用上面用到的模板添加上去。
+```
+// 客户端
+export default (styles) => {
+  return (DecoratedComponent) => {
+    return class NewComponent extends Component {
+    static propTypes = {
+      staticContext: PropTypes.object,
+    }
+
+    static asyncData = DecoratedComponent.asyncData // 后面数据预取所需要的
+
+    componentWillMount() {
+      if (this.props.staticContext) {
+        this.props.staticContext.css.push(styles._getCss());
+      }
+    }
+
+    render() {
+      return <DecoratedComponent {...this.props} />
+    }
+    }
+  }
+}
+
+// 服务端erver-render.js
+const cssStr = context.css.length ? context.css.join('\n') : ''
+```
+但其实做这之前有个前提就是需要在服务端获得每个页面组件的数据，这也是后面数据预取的重要条件。
+
+### 数据预取
+
+。。。

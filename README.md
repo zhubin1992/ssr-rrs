@@ -106,4 +106,80 @@ const cssStr = context.css.length ? context.css.join('\n') : ''
 
 ### 数据预取
 
-。。。
+页面组件上添加静态方法，用来获取数据。因为要返回一个promise，用redux-thunk的话比较方便，redux-saga的话需要用到runSaga方法
+```
+static asyncData(store) {
+    const saga = loginToken
+    // redux-thunk 
+    // return store.dispatch(action.loginToken())
+    return runSaga({
+      dispatch: res => store.dispatch(res),
+    }, saga, { token: '' }).done.catch(err => console.log(err))
+  }
+```
+
+把接着路由修改成数组形式
+```
+const routes = [
+  {
+    path: '/index',
+    component: Main,
+    exact: true,
+    key: 'index',
+  },
+  {
+    path: '/newcode',
+    component: NewCode,
+    exact: true,
+    key: 'newcode',
+  },
+]
+```
+改成这种形式的目的是为了用react-router-config中的matchRoutes匹配路由，并执行路由组件的静态方法
+```
+    const branch = matchRoutes(routes, req.path)
+    const promises = branch.map(({ route }) => {
+      const fetch = route.component ? route.component.asyncData : null
+      return fetch instanceof Function ? fetch(store) : Promise.resolve(null)
+    })
+```
+（在构建项目的过程中正好赶上了react-router不小心发布5.0，导致react-router-config@5.0和react-router@4.x版本不兼容renderRoutes方法有问题，因此当时在这个项目中手写了renderRoutes，实际上用react-router-config@1.0.0-beta.4的方法不会出现问题）
+
+把promise全部执行完后，再进行renderToString，并把数据和优化seo那步一样写入到模板ejs上
+```
+<script>
+  window.__INITIAL__STATE__ = <%%- initialState %>
+</script>
+```
+然后在redux上根据window对象判断是否是服务端来获取初始化数据
+```
+const initialState = () => {
+  if (typeof window !== 'undefined' && window.__INITIAL__STATE__) {
+    return immutable.fromJS({...initState, ...window.__INITIAL__STATE__})
+  }
+  return immutable.fromJS(
+    initState,
+  )
+}
+```
+### 开发时编译
+
+开发客户端时用webpack-dev-server即可，开发服务端时需要先把客户端的代码用webpack编译后再启动服务端，所以每次改变客户端代码就需要重新打包一遍，再启动服务端过于麻烦。使用 memory-fs 替换默认的 outputFileSystem，以将文件写入到内存中，再通过包装成函数字符串，在vm中运行(就是实现 require() 的工作机制)，得到server入口文件。此时就可以和生产时代码一样启动服务端。
+```
+// module.js的_compile部分代码
+
+var self = this;
+...
+function require(path) {
+  return self.require(path);
+}
+...
+var wrapper = Module.wrap(content);
+...
+var compiledWrapper = runInThisContext(wrapper, { filename: filename });
+...
+var args = [self.exports, require, self, filename, dirname];
+return compiledWrapper.apply(self.exports, args);
+```
+
+

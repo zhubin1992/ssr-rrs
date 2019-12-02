@@ -1,5 +1,5 @@
 # ssr-rrs   <img style="float:right" src="./ssr_favicon.ico"> 
-ssr-rrs是一个使用react,rudex,express,css-in-js搭建的服务端渲染骨架
+ssr-rrs是一个使用react,rudex,express,css-module搭建的服务端渲染骨架
 
 ### 项目由来
 也是因为之前搭建的那个服务端渲染项目，由于react新版本的问题，导致其中一些插件不能正常使用（如<a target='_blank' href="https://github.com/ctrlplusb/react-tree-walker">react-tree-walker</a>），所以想重新搭建一个，也是重头梳理一遍服务端渲染流程，巩固一下知识点。
@@ -71,9 +71,9 @@ const context = {}
 ```
 用ejs模板来生成具体html页面。接下来既然要做每页的渲染，样式肯定不能直接导入。
 
-### 利用css-in-js做每页渲染
+### 利用css-module做每页渲染
 
-上一个ssr项目是用<a href='https://material-ui.com/' target='_blank'>material-ui</a>作为样式组件库导入的，它支持服务端渲染并提供了详细的使用流程。而在这个项目我并不打算用它，想用自己写的组件，而且可以用less，找了很多方法用css-in-js能较好的解决需求。
+上一个ssr项目是用<a href='https://material-ui.com/' target='_blank'>material-ui</a>作为样式组件库导入的，它支持服务端渲染并提供了详细的使用流程。而在这个项目我并不打算用它，想用自己写的组件，而且可以用less，找了很多方法用css-module能较好的解决需求。
 首先在每个页面组件里添加一个高阶函数，这个函数用来把页面需要渲染的样式用_getCss处理后传入到静态路由提供的context里面，然后在服务端渲染的时候再把样式取出来用上面用到的模板添加上去。
 ```
 // 客户端
